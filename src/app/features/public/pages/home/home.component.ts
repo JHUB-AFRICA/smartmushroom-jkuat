@@ -47,7 +47,7 @@ type SmartMushroomFeedItem = {
 export class HomeComponent {
   private readonly teamService = inject(TeamService);
   protected readonly team = signal<TeamMember[]>([]);
-  protected readonly partners = [{ slug:'eu',name:'European Union (EU)',logo:'/images/logos/eu_emblem.svg' },{ slug:'bridge-ai',name:'BRIDGE-AI',logo:'/images/logos/bridge_ai_logo.svg' },{ slug:'gates-foundation',name:'Bill & Melinda Gates Foundation',logo:'/images/logos/bill.jpeg' },{ slug:'jkuat',name:'JKUAT',logo:'/images/logos/jkuat_logo.svg' },{ slug:'mush&',name:'Mush&',logo:'/images/logos/mush.jpeg' },{ slug:'koica',name:'KOICA',logo:'/images/logos/koica.jpeg' },{ slug:'gdih',name:'gDIH',logo:'/images/logos/gdih.jpeg' },{ slug:'jhub',name:'JHUB Africa',logo:'/images/logos/jhub_logo.svg' }];
+  protected readonly partners = [{ slug:'eu',name:'European Union (EU)',logo:'/images/logos/eu_emblem.svg' },{ slug:'bridge-ai',name:'BRIDGE-AI',logo:'/images/logos/bridge_ai_logo.svg' },{ slug:'jkuat',name:'JKUAT',logo:'/images/webimages/partners/jkuat-logo.png' },{ slug:'mush&',name:'Mush&',logo:'/images/logos/mush.jpeg' },{ slug:'koica',name:'KOICA',logo:'/images/logos/koica.jpeg' },{ slug:'gdih',name:'gDIH',logo:'/images/logos/gdih.jpeg' },{ slug:'jhub',name:'JHUB Africa',logo:'/images/logos/jhub_logo.svg' }];
   protected readonly marqueePartners = [...this.partners,...this.partners];
   protected readonly products = [{ index:'01 / GROWING SYSTEM',icon:'◒',title:'Smart Mushroom',description:'Sensor-led growing guidance for more stable conditions.',route:'/smartmushroom-tech' },{ index:'02 / LEARNING',icon:'✦',title:'Farmer training',description:'Practical workshops for digital farming skills.',route:'/training-events' },{ index:'03 / REPLICATION',icon:'↗',title:'Replication toolkit',description:'Open resources for adapting climate-smart innovation.',route:'/replication-toolkit' },{ index:'04 / COMMUNITY',icon:'◎',title:'Community practice',description:'A network of builders, researchers, farmers and SMEs.',route:'/community-practice' }];
   protected readonly counters = [{value:'0',label:'Farmers trained'},{value:'0',label:'Grow houses connected'},{value:'0',label:'Training sessions'},{value:'0',label:'SMEs supported'}];
@@ -1717,14 +1717,12 @@ export class LegacyHomeComponent implements OnInit, OnDestroy {
   protected readonly activeHeroImage = computed(() => this.heroImages()[this.heroIndex()] || this.localHeroFallback);
   protected readonly heroFallbackImage = computed(() => this.heroImages()[0] || this.localHeroFallback);
   protected readonly partners = [
-    { slug: 'eu', name: 'European Union (EU)', logo: '/images/logos/eu_emblem.svg' },
-    { slug: 'bridge-ai', name: 'BRIDGE-AI', logo: '/images/logos/bridge_ai_logo.svg' },
-    { slug: 'gates-foundation', name: 'Bill & Melinda Gates Foundation', logo: '/images/logos/bill.jpeg' },
-    { slug: 'jkuat', name: 'JKUAT', logo: '/images/logos/jkuat_logo.svg' },
-    { slug: 'mush&', name: 'Mush&', logo: '/images/logos/mush.jpeg' },
-    { slug: 'koica', name: 'KOICA', logo: '/images/logos/koica.jpeg' },
-    { slug: 'gdih', name: 'gDIH', logo: '/images/logos/gdih.jpeg' },
-    { slug: 'jhub', name: 'JHUB Africa', logo: '/images/logos/jhub_logo.svg' }
+    { slug: 'eu', name: '', logo: '/images/logos/eu_emblem.svg' },
+    { slug: 'bridge-ai', name: '', logo: '/images/logos/bridge_ai_logo.svg' },
+    { slug: 'jkuat', name: '', logo: '/images/webimages/partners/jkuat-logo.png' },
+    { slug: 'mush&', name: '', logo: '/images/logos/mush.jpeg' },
+    { slug: 'koica', name: '', logo: '/images/logos/koica.jpeg' },
+    { slug: 'jhub', name: '', logo: '/images/logos/jhub_logo.svg' }
   ];
   protected readonly marqueePartners = [...this.partners, ...this.partners];
   private rotation?: ReturnType<typeof setInterval>;
