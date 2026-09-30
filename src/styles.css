@@ -264,7 +264,6 @@ img {
 .event-detail-page .detail-shell::before,
 .gallery-page .page-wrap::before,
 .resources-page .resources-section::before,
-.activities-page .activities-section::before,
 .activity-detail-page .detail-shell::before {
   content: '';
   display: block;
@@ -324,8 +323,6 @@ img {
   color: #fff;
   font: 400 clamp(2.2rem, 5vw, 4.3rem)/1 Georgia, 'Times New Roman', serif;
 }
-.activities-page .activities-banner-rule { width: 58px; height: 3px; margin-top: 8px; background: var(--color-warm-ochre); }
-
 h1 {
   font-family: var(--font-h1);
   font-size: 1.75rem;

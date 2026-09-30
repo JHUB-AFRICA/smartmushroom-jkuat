@@ -48,16 +48,16 @@
     "id": 4
   },
   {
-    "name": "Bradon Muriithi",
-    "role": "Software Engineering Team Lead",
     "affiliation": "JHUB Africa",
-    "link": "https://www.linkedin.com/in/bradon-techs-253814410/",
-    "website": "https://www.bradon.space",
-    "display_order": 5,
-    "is_visible": true,
     "consent_status": "approved",
+    "display_order": 5,
+    "id": 5,
+    "is_visible": true,
+    "link": "https://www.linkedin.com/in/bradon-techs-253814410/",
+    "name": "Bradon Muriithi",
     "photo": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1789982119/bridge-ai/team/jdc9aiqjfnknlobgyeuv.jpg",
-    "id": 5
+    "role": "Software Engineer - Team Lead",
+    "website": "https://www.bradon.space"
   },
   {
     "name": "Arnold Odero",

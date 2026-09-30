@@ -2,7 +2,7 @@
 // Smart Mushroom Kenya Pilot - Activities Component
 // ============================================================
 
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ActivityService } from '../../../../services/activity.service';
@@ -24,70 +24,6 @@ type ActivityFilters = {
       <section class="activities-banner" aria-labelledby="activities-title">
         <div class="activities-banner-inner">
           <h1 id="activities-title">SmartMushroom News and Activities</h1>
-          <span class="activities-banner-rule" aria-hidden="true"></span>
-        </div>
-      </section>
-
-      <section class="filter-section" id="filters">
-        <div class="filter-container">
-          <div class="filter-group">
-            <span class="filter-label">Filter</span>
-
-            <div class="custom-dropdown">
-              <button type="button" class="dropdown-trigger" [class.open]="wpOpen" (click)="$event.stopPropagation(); toggleDropdown('wp')">
-                <span>{{ selectedFilters.wp || 'All Work Packages' }}</span>
-                <span class="dropdown-arrow">&#9662;</span>
-              </button>
-              <ul class="dropdown-menu" [class.open]="wpOpen">
-                <li (click)="setFilter('wp', '')">All Work Packages</li>
-                @for (wp of wpOptions; track wp) {
-                  <li (click)="setFilter('wp', wp)" [class.active]="selectedFilters.wp === wp">{{ wp }}</li>
-                }
-              </ul>
-            </div>
-
-            <div class="custom-dropdown">
-              <button type="button" class="dropdown-trigger" [class.open]="typeOpen" (click)="$event.stopPropagation(); toggleDropdown('type')">
-                <span>{{ selectedFilters.type || 'All Activity Types' }}</span>
-                <span class="dropdown-arrow">&#9662;</span>
-              </button>
-              <ul class="dropdown-menu" [class.open]="typeOpen">
-                <li (click)="setFilter('type', '')">All Activity Types</li>
-                @for (type of typeOptions; track type) {
-                  <li (click)="setFilter('type', type)" [class.active]="selectedFilters.type === type">{{ formatTypeLabel(type) }}</li>
-                }
-              </ul>
-            </div>
-
-            <div class="custom-dropdown">
-              <button type="button" class="dropdown-trigger" [class.open]="yearOpen" (click)="$event.stopPropagation(); toggleDropdown('year')">
-                <span>{{ selectedFilters.year || 'All Years' }}</span>
-                <span class="dropdown-arrow">&#9662;</span>
-              </button>
-              <ul class="dropdown-menu" [class.open]="yearOpen">
-                <li (click)="setFilter('year', '')">All Years</li>
-                @for (year of yearOptions; track year) {
-                  <li (click)="setFilter('year', year)" [class.active]="selectedFilters.year === year">{{ year }}</li>
-                }
-              </ul>
-            </div>
-          </div>
-
-          <div class="filter-actions">
-            <label class="sort-control">
-              <span>Sort</span>
-              <select [value]="sortOrder" (change)="setSortOrder($any($event.target).value)">
-                <option value="latest">Latest</option>
-                <option value="oldest">Oldest</option>
-              </select>
-            </label>
-            @if (hasActiveFilters()) {
-              <span class="filter-active-count">Active Filters</span>
-            }
-            <button type="button" class="filter-clear" (click)="clearFilters()">
-              <i class="fas fa-times"></i> Clear
-            </button>
-          </div>
         </div>
       </section>
 
@@ -95,7 +31,70 @@ type ActivityFilters = {
         <div class="container">
           <div class="section-header reveal">
             <h2>Latest <span class="highlight">Activities</span></h2>
+            <button type="button" class="open-filters" (click)="openFilterModal()" aria-haspopup="dialog" aria-controls="activity-filter-dialog">
+              <i class="fas fa-sliders-h" aria-hidden="true"></i>
+              <span>Filter Events</span>
+              @if (hasActiveFilters()) {
+                <span class="active-filter-count">{{ activeFilterCount() }}</span>
+              }
+            </button>
           </div>
+
+          <dialog #filterDialog id="activity-filter-dialog" class="filter-dialog" aria-labelledby="filter-dialog-title" (click)="onDialogClick($event)">
+            <div class="filter-dialog-content">
+              <header class="filter-dialog-header">
+                <div>
+                  <span class="filter-eyebrow">Refine the collection</span>
+                  <h2 id="filter-dialog-title">Filter activities</h2>
+                </div>
+                <button type="button" class="dialog-close" (click)="closeFilterModal()" aria-label="Close filters">
+                  <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+              </header>
+
+              <div class="filter-fields">
+                <label class="filter-field">
+                  <span>Work package</span>
+                  <select [value]="selectedFilters.wp" (change)="setFilter('wp', $any($event.target).value)">
+                    <option value="">All work packages</option>
+                    @for (wp of wpOptions; track wp) {
+                      <option [value]="wp">{{ wp }}</option>
+                    }
+                  </select>
+                </label>
+                <label class="filter-field">
+                  <span>Activity type</span>
+                  <select [value]="selectedFilters.type" (change)="setFilter('type', $any($event.target).value)">
+                    <option value="">All activity types</option>
+                    @for (type of typeOptions; track type) {
+                      <option [value]="type">{{ formatTypeLabel(type) }}</option>
+                    }
+                  </select>
+                </label>
+                <label class="filter-field">
+                  <span>Year</span>
+                  <select [value]="selectedFilters.year" (change)="setFilter('year', $any($event.target).value)">
+                    <option value="">All years</option>
+                    @for (year of yearOptions; track year) {
+                      <option [value]="year">{{ year }}</option>
+                    }
+                  </select>
+                </label>
+                <label class="filter-field">
+                  <span>Sort by</span>
+                  <select [value]="sortOrder" (change)="setSortOrder($any($event.target).value)">
+                    <option value="latest">Latest first</option>
+                    <option value="oldest">Oldest first</option>
+                  </select>
+                </label>
+              </div>
+
+              <footer class="filter-dialog-footer">
+                <button type="button" class="clear-filters" (click)="clearFilters()">Clear filters</button>
+                <button type="button" class="show-results" (click)="closeFilterModal()">Show {{ filteredActivities().length }} activities</button>
+              </footer>
+            </div>
+          </dialog>
 
           <div class="activities-grid">
             @if (isLoading()) {
@@ -189,32 +188,34 @@ type ActivityFilters = {
     .hero-sub { font-size: 1.12rem; color: rgba(255,255,255,0.8); margin: 0 0 8px; letter-spacing: 0.02em; }
     .hero-description { max-width: 560px; font-size: 1.02rem; line-height: 1.8; color: rgba(255,255,255,0.76); margin: 16px 0 28px; }
     .hero-buttons { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-    .btn-primary, .btn-secondary, .filter-clear, .card-link { display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: 50px; font-weight: 600; transition: all 0.25s ease; }
+    .btn-primary, .btn-secondary, .card-link { display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: 50px; font-weight: 600; transition: all 0.25s ease; }
     .btn-primary { background: var(--color-forest-green); color: var(--color-surface-white); padding: 14px 32px; border: none; text-decoration: none; }
     .btn-primary:hover { background: var(--color-forest-green-dark); transform: translateY(-3px); }
     .btn-secondary { background: transparent; color: #fff; padding: 14px 32px; border: 1.5px solid rgba(255,255,255,0.3); text-decoration: none; }
     .btn-secondary:hover { background: rgba(255,255,255,0.08); transform: translateY(-3px); }
-    .filter-section { position: sticky; top: var(--site-header-offset, 80px); z-index: 40; background: var(--color-warm-ochre); border-bottom: 1px solid rgba(10, 10, 10, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
-    .filter-container { max-width: 1280px; margin: 0 auto; padding: 16px 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; }
-    .filter-group { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
-    .filter-label { font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; font-weight: 600; }
-    .custom-dropdown { position: relative; min-width: 130px; }
-    .dropdown-trigger { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; padding: 7px 14px; background: #fffdf7; border: 1px solid #e1d8c0; border-radius: 50px; font-size: 0.75rem; font-weight: 500; color: #2d3d35; cursor: pointer; }
-    .dropdown-arrow { font-size: 0.55rem; color: #6e7767; }
-    .dropdown-menu { position: absolute; top: calc(100% + 4px); left: 0; right: 0; min-width: 150px; max-height: 180px; overflow-y: auto; background: #fffdf7; border: 1px solid #e1d8c0; border-radius: 10px; padding: 4px 0; box-shadow: 0 12px 40px rgba(0,0,0,0.08); opacity: 0; visibility: hidden; transform: translateY(-4px); transition: all 0.25s ease; list-style: none; z-index: 1000; }
-    .dropdown-menu.open { opacity: 1; visibility: visible; transform: translateY(0); }
-    .dropdown-menu li { padding: 6px 14px; font-size: 0.75rem; color: #2d3d35; cursor: pointer; list-style: none; }
-    .dropdown-menu li:hover, .dropdown-menu li.active { background: rgba(124, 79, 163, 0.09); color: #5b3878; font-weight: 600; }
-    .filter-actions { display: flex; align-items: center; gap: 8px; }
-    .sort-control { display: inline-flex; align-items: center; gap: 7px; padding: 6px 8px 6px 12px; border: 1px solid #e1d8c0; border-radius: 50px; background: #fffdf7; color: #6e7767; font-size: .62rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-    .sort-control select { border: 0; outline: 0; padding: 1px 18px 1px 2px; background: transparent; color: #26432b; font: 600 .72rem 'Inter', sans-serif; cursor: pointer; }
-    .sort-control:focus-within { border-color: #c89b3c; box-shadow: 0 0 0 2px rgba(200,155,60,.16); }
-    .filter-active-count { display: inline-block; font-size: 0.62rem; font-weight: 600; color: #5b3878; background: rgba(124, 79, 163, 0.09); padding: 3px 12px; border-radius: 50px; }
-    .filter-clear { padding: 6px 16px; background: #efe6ce; border: 1px solid #e1d8c0; color: #2d3d35; cursor: pointer; }
-    .filter-clear:hover { background: #26432b; color: #f7f2e6; }
-    .activities-section { padding: 44px 0 64px; background: #fff; }
-    .section-header { max-width: 720px; margin: 0 auto 48px; text-align: center; }
-    .section-header h2 { font-size: 2.8rem; font-weight: 800; color: #17241b; line-height: 1.08; letter-spacing: -0.02em; margin: 0; }
+    .activities-section { padding: 0 0 64px; background: #fff; }
+    .section-header { position: sticky; top: var(--site-header-offset, 80px); z-index: 30; max-width: 1280px; margin: 0 auto 32px; padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px; text-align: left; background: rgba(255,255,255,.97); border-bottom: 1px solid #e1e5e1; box-shadow: 0 8px 20px rgba(22,40,26,.06); }
+    .section-header h2 { font-size: 2rem; font-weight: 800; color: #17241b; line-height: 1.08; margin: 0; }
+    .open-filters { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 0 18px; border: 1px solid #26432b; border-radius: 6px; background: #26432b; color: #fffdf7; font-size: .9rem; font-weight: 650; cursor: pointer; transition: background .2s ease, transform .2s ease; }
+    .open-filters:hover { background: #16281a; transform: translateY(-1px); }
+    .open-filters:focus-visible, .dialog-close:focus-visible, .clear-filters:focus-visible, .show-results:focus-visible, .filter-field select:focus-visible { outline: 3px solid #c89b3c; outline-offset: 3px; }
+    .active-filter-count { display: grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 50%; background: #d8e86b; color: #17241b; font-size: .72rem; font-weight: 800; }
+    .filter-dialog { position: fixed; inset: 0; margin: auto; width: min(560px, calc(100% - 32px)); max-width: none; max-height: min(90dvh, 680px); overflow-y: auto; padding: 0; border: 1px solid #d9dfd8; border-radius: 10px; color: #17241b; background: #fffdf7; box-shadow: 0 24px 80px rgba(10,25,16,.28); }
+    .filter-dialog::backdrop { background: rgba(12,28,19,.62); backdrop-filter: blur(3px); }
+    .filter-dialog-content { padding: 28px; }
+    .filter-dialog-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding-bottom: 22px; border-bottom: 1px solid #e1e5e1; }
+    .filter-eyebrow { color: #647365; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .filter-dialog-header h2 { margin: 5px 0 0; font-size: 1.65rem; line-height: 1.2; }
+    .dialog-close { display: grid; place-items: center; flex: 0 0 40px; width: 40px; height: 40px; border: 1px solid #d9dfd8; border-radius: 6px; background: #fff; color: #26432b; font-size: 1rem; cursor: pointer; }
+    .filter-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 24px 0; }
+    .filter-field { display: grid; gap: 8px; color: #34463a; font-size: .82rem; font-weight: 650; }
+    .filter-field select { width: 100%; min-height: 46px; padding: 0 38px 0 12px; border: 1px solid #cbd4ca; border-radius: 5px; background: #fff; color: #24372a; font: inherit; font-weight: 500; cursor: pointer; }
+    .filter-dialog-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 18px; border-top: 1px solid #e1e5e1; }
+    .clear-filters, .show-results { min-height: 44px; padding: 0 16px; border-radius: 5px; font: inherit; font-size: .88rem; font-weight: 650; cursor: pointer; }
+    .clear-filters { border: 1px solid #cbd4ca; background: transparent; color: #34463a; }
+    .clear-filters:hover { background: #eef1eb; }
+    .show-results { border: 1px solid #26432b; background: #26432b; color: #fffdf7; }
+    .show-results:hover { background: #16281a; }
     .section-header .highlight { color: #818528; }
     .section-header p { margin-top: 14px; font-size: 1.05rem; color: #6e7767; }
     .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 360px)); justify-content: center; gap: 24px; align-items: stretch; max-width: 1180px; margin: 0 auto; }
@@ -259,11 +260,12 @@ type ActivityFilters = {
     .empty-state h3 { margin: 0 0 6px; font-size: 1.3rem; color: #17241b; }
     .empty-state p { max-width: 400px; margin: 0 auto; color: #6e7767; }
     @media (max-width: 1024px) { .section-header h2 { font-size: 2.2rem; } }
-    @media (max-width: 768px) { .filter-container { padding: 0 16px; flex-direction: column; } .filter-group { justify-content: center; } .activities-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 600px; } .section-header h2 { font-size: 1.8rem; } .section-header p { font-size: 0.95rem; } }
-    @media (max-width: 480px) { .container { padding: 0 16px; } .hero-left h1 { font-size: 1.8rem; } .section-header h2 { font-size: 1.5rem; } .card-body { padding: 16px 18px 0; } .card-footer { flex-direction: column; align-items: flex-start; } .activities-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .section-header { padding: 14px 16px; margin-bottom: 24px; } .section-header h2 { font-size: 1.65rem; } .activities-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 600px; } .filter-dialog-content { padding: 22px; } }
+    @media (max-width: 480px) { .container { padding: 0 16px; } .hero-left h1 { font-size: 1.8rem; } .section-header { gap: 10px; } .section-header h2 { font-size: 1.12rem; } .open-filters { min-height: 40px; padding: 0 9px; gap: 7px; font-size: .76rem; } .filter-fields { grid-template-columns: 1fr; gap: 14px; padding: 18px 0; } .filter-dialog-content { padding: 18px; } .filter-dialog-header h2 { font-size: 1.4rem; } .filter-dialog-footer { align-items: stretch; flex-direction: column-reverse; } .clear-filters, .show-results { width: 100%; } .card-body { padding: 16px 18px 0; } .card-footer { flex-direction: column; align-items: flex-start; } .activities-grid { grid-template-columns: 1fr; } }
   `]
 })
 export class ActivitiesComponent implements OnInit, OnDestroy {
+  @ViewChild('filterDialog') private filterDialog?: ElementRef<HTMLDialogElement>;
   protected allActivities = signal<Activity[]>([]);
   protected filteredActivities = signal<Activity[]>([]);
   protected isLoading = signal(true);
@@ -273,9 +275,6 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   protected wpOptions: string[] = [];
   protected typeOptions: string[] = [];
   protected yearOptions: string[] = [];
-  protected wpOpen = false;
-  protected typeOpen = false;
-  protected yearOpen = false;
   protected heroIndex = signal(0);
   protected heroImages = signal<string[]>(['/images/smartmushrooms/q.jpeg']);
   private heroTimer?: number;
@@ -289,7 +288,6 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     this.loadHeroImages();
     this.syncStickyOffset();
     window.addEventListener('resize', this.syncStickyOffset.bind(this));
-    document.addEventListener('click', this.handleDocumentClick);
     this.heroTimer = window.setInterval(() => {
       this.heroIndex.update(index => (index + 1) % this.heroImages().length);
     }, 7000);
@@ -297,7 +295,6 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.heroTimer) window.clearInterval(this.heroTimer);
-    document.removeEventListener('click', this.handleDocumentClick);
   }
 
   private syncStickyOffset(): void {
@@ -305,12 +302,6 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     const headerHeight = header ? header.offsetHeight : 92;
     document.documentElement.style.setProperty('--site-header-offset', `${headerHeight}px`);
   }
-
-  private handleDocumentClick = (): void => {
-    this.wpOpen = false;
-    this.typeOpen = false;
-    this.yearOpen = false;
-  };
 
   private loadActivities(): void {
     this.activityService.getActivities().subscribe({
@@ -350,22 +341,14 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       .sort((first, second) => Number(second) - Number(first));
   }
 
-  protected toggleDropdown(key: 'wp' | 'type' | 'year'): void {
-    this.wpOpen = key === 'wp' ? !this.wpOpen : false;
-    this.typeOpen = key === 'type' ? !this.typeOpen : false;
-    this.yearOpen = key === 'year' ? !this.yearOpen : false;
-  }
-
   protected setFilter(key: 'wp' | 'type' | 'year', value: string): void {
     this.selectedFilters[key] = value;
     this.applyFilters();
-    this.closeDropdowns();
   }
 
   protected clearFilters(): void {
     this.selectedFilters = { wp: '', type: '', year: '' };
     this.applyFilters();
-    this.closeDropdowns();
   }
 
   protected setSortOrder(order: string): void {
@@ -379,6 +362,24 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
 
   protected hasActiveFilters(): boolean {
     return Object.values(this.selectedFilters).some((value) => value && value.length > 0);
+  }
+
+  protected activeFilterCount(): number {
+    return Object.values(this.selectedFilters).filter(Boolean).length;
+  }
+
+  protected openFilterModal(): void {
+    this.filterDialog?.nativeElement.showModal();
+  }
+
+  protected closeFilterModal(): void {
+    this.filterDialog?.nativeElement.close();
+  }
+
+  protected onDialogClick(event: MouseEvent): void {
+    if (event.target === event.currentTarget) {
+      this.closeFilterModal();
+    }
   }
 
   protected countType(type: string): number {
@@ -442,12 +443,6 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   protected trackByActivity = (_: number, activity: Activity): string => activity.slug || activity.id?.toString() || activity.title;
-
-  private closeDropdowns(): void {
-    this.wpOpen = false;
-    this.typeOpen = false;
-    this.yearOpen = false;
-  }
 
   private applyFilters(): void {
     let filtered = [...this.allActivities()];
