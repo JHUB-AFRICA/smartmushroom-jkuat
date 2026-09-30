@@ -39,8 +39,8 @@
 .shop-hero::before { content: ''; position: absolute; inset: 0; opacity: .16; background-image: linear-gradient(rgba(216,232,107,.28) 1px, transparent 1px), linear-gradient(90deg, rgba(216,232,107,.28) 1px, transparent 1px); background-size: 48px 48px; pointer-events: none; }
 .shop-hero::after { width: 100%; height: 100%; opacity: .08; }
 .marketplace-hero-title { position: relative; z-index: 1; text-align: center; }
-.marketplace-hero-title .eyebrow { display: block; margin-bottom: 12px; color: #d8e86b; font-size: .78rem; letter-spacing: .2em; }
 .marketplace-hero-title h1 { margin: 0; color: #fffdf7; font: 400 clamp(3rem, 7vw, 6.4rem)/.95 Georgia, 'Times New Roman', serif; letter-spacing: -.03em; }
+.catalog-status { padding: 30px 0; color: #c4d8ce; }
 .floating-cart-button { position: fixed; right: 24px; bottom: 24px; z-index: 60; display: inline-flex; align-items: center; gap: 10px; min-height: 54px; padding: 10px 15px 10px 12px; border: 1px solid #d8e86b; border-radius: 999px; background: #d8e86b; color: #102d25; font: 800 .82rem var(--font-body, sans-serif); box-shadow: 0 16px 32px rgba(0,0,0,.24); cursor: pointer; transition: transform .2s ease, background .2s ease, box-shadow .2s ease; }
 .floating-cart-button:hover { background: #eff69b; transform: translateY(-3px); box-shadow: 0 20px 38px rgba(0,0,0,.3); }
 .floating-cart-icon { display: grid; place-items: center; min-width: 28px; height: 28px; border-radius: 50%; background: #102d25; color: #d8e86b; font-size: .55rem; letter-spacing: .04em; }

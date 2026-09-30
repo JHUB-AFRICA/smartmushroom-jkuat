@@ -633,6 +633,58 @@ def clear_submissions():
     return jsonify({'success': True})
 
 # ============================================================
+# Shop products
+# ============================================================
+def _shop_product_payload(data):
+    if not isinstance(data, dict):
+        return None, 'A product object is required'
+
+    required_fields = ('name', 'category', 'description', 'price', 'unit', 'image')
+    if any(not isinstance(data.get(field), str) or not data[field].strip() for field in required_fields if field != 'price'):
+        return None, 'Name, category, description, unit, and image are required'
+
+    price = data.get('price')
+    if isinstance(price, bool) or not isinstance(price, (int, float)) or price < 0:
+        return None, 'Price must be a non-negative number'
+
+    allowed_fields = {'name', 'category', 'description', 'price', 'unit', 'image', 'badge'}
+    if set(data) - allowed_fields:
+        return None, 'The product contains unsupported fields'
+    if 'badge' in data and not isinstance(data['badge'], str):
+        return None, 'Badge must be text'
+
+    product = {field: data[field].strip() for field in required_fields if field != 'price'}
+    product['price'] = price
+    if data.get('badge', '').strip():
+        product['badge'] = data['badge'].strip()
+    return product, None
+
+
+@api_bp.route('/shop-products', methods=['GET', 'POST'])
+def shop_products():
+    if request.method == 'GET':
+        return jsonify(json_service.get_all('shopproducts.json'))
+
+    product, error = _shop_product_payload(request.get_json(silent=True))
+    if error:
+        return jsonify({'error': error}), 400
+    return jsonify(json_service.create('shopproducts.json', product)), 201
+
+
+@api_bp.route('/shop-products/<int:id>', methods=['PUT', 'DELETE'])
+def manage_shop_product(id):
+    if request.method == 'DELETE':
+        return jsonify({'success': True}) if json_service.delete('shopproducts.json', id) else (jsonify({'error': 'Not found'}), 404)
+
+    if not json_service.get_by_id('shopproducts.json', id):
+        return jsonify({'error': 'Not found'}), 404
+    product, error = _shop_product_payload(request.get_json(silent=True))
+    if error:
+        return jsonify({'error': error}), 400
+    return jsonify(json_service.update('shopproducts.json', id, product))
+
+
+# ============================================================
 # Shop requests
 # ============================================================
 @api_bp.route('/shop', methods=['GET', 'POST'])

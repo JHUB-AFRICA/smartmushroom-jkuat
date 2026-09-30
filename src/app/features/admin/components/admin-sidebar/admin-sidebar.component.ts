@@ -278,7 +278,8 @@ export class AdminSidebarComponent {
     { path: 'community', label: 'Community', icon: this.getCommunityIcon(), active: false },
     { path: 'replication', label: 'Replication', icon: this.getReplicationIcon(), active: false },
     { path: 'submissions', label: 'Submissions', icon: this.getSubmissionsIcon(), active: false },
-    { path: 'shop-requests', label: 'Shop requests', icon: this.getShopIcon(), active: false }
+    { path: 'shop-requests', label: 'Shop requests', icon: this.getShopIcon(), active: false },
+    { path: 'shop-products', label: 'Shop products', icon: 'fa-solid fa-box-open', active: false }
   ]);
 
   constructor(

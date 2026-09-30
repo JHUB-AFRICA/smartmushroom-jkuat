@@ -14,7 +14,8 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
 import { TeamService } from '../../../../services/team.service';
 import { TeamMember } from '../../../core/models/team.model';
 import { Router } from '@angular/router';
-import { ShopCartService, ShopProduct, SHOP_PRODUCTS } from '../shop/shop.component';
+import { ShopCartService, ShopProduct } from '../shop/shop.component';
+import { ApiService } from '../../../core/services/api.service';
 
 type SmartMushroomFeedItem = {
   title: string;
@@ -118,7 +119,7 @@ export class HomeComponent {
             <p class="section-kicker">SmartMushroom Marketplace</p>
           </div>
           <div class="featured-products-track" aria-label="Featured shop products">
-            @for (product of featuredProducts; track product.id) {
+            @for (product of featuredProducts(); track product.id) {
               <article class="featured-product-card">
                 <img [src]="product.image" [alt]="product.name" loading="lazy" />
                 @if (product.badge) { <span class="product-badge">{{ product.badge }}</span> }
@@ -1738,13 +1739,7 @@ export class LegacyHomeComponent implements OnInit, OnDestroy {
   protected latestActivities = signal<Activity[]>([]);
   protected upcomingEvents = signal<Event[]>([]);
   protected readonly team = signal<TeamMember[]>([]);
-  protected readonly featuredProducts = SHOP_PRODUCTS.filter(product => [
-    'jambo101-spawn',
-    'mambo101-spawn',
-    'fresh-mushroom-punnets',
-    'mushroom-wine',
-    'pumice-house-iot-kit'
-  ].includes(product.id));
+  protected readonly featuredProducts = signal<ShopProduct[]>([]);
   protected readonly impactCounters = [
     { value: '0', label: 'Active grow houses' },
     { value: '0 kg', label: 'Spawn distributed' },
@@ -1752,6 +1747,7 @@ export class LegacyHomeComponent implements OnInit, OnDestroy {
     { value: '0', label: 'Community partners' }
   ];
   private readonly cartService = inject(ShopCartService);
+  private readonly api = inject(ApiService);
   protected readonly cartCount = this.cartService.cartCount;
   protected readonly latestFeed = computed<SmartMushroomFeedItem[]>(() => [
     ...this.latestActivities().map(activity => ({
@@ -1800,6 +1796,7 @@ export class LegacyHomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.teamService.getVisibleTeamMembers().subscribe({ next: members => this.team.set(members), error: () => this.team.set([]) });
+    this.api.get<ShopProduct[]>('/shop-products').subscribe({ next: products => this.featuredProducts.set(products), error: () => this.featuredProducts.set([]) });
     this.loadData();
     this.loadHeroImages();
     this.syncStickyOffset();

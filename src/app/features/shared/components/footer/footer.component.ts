@@ -13,22 +13,40 @@ import { RouterModule } from '@angular/router';
   template: `
     <footer class="footer-ultimate" role="contentinfo">
       <div class="footer-container">
+        <section class="footer-funding" aria-label="European Union funding">
+          <a class="footer-funding-emblem" [routerLink]="['/partners/eu']" aria-label="European Union partner page">
+            <img src="/images/logos/eu_emblem.svg" alt="European Union emblem" />
+          </a>
+          <div class="footer-funding-copy">
+            <p class="footer-funding-title">Funded by the European Union</p>
+            <p class="footer-funding-grant">Horizon Europe &middot; Grant Agreement No. 101299050</p>
+          </div>
+        </section>
+
         <div class="footer-reference-grid">
           <section class="footer-reference-column">
             <h3>Contacts &amp; Location</h3>
-            <p><strong>Physical Address:</strong> JKUAT Main Campus, Juja, Kiambu County, Kenya.</p>
-            <p><strong>Contact Info:</strong> Email: <a href="mailto:info@smartmushroom.jkuat.ac.ke">info@smartmushroom.jkuat.ac.ke</a> <span aria-hidden="true">|</span> Phone/WhatsApp: <a href="tel:+254700000000">+254 700 000 000</a>.</p>
+            <p class="footer-institution">Jomo Kenyatta University of Agriculture and Technology</p>
+            <address class="footer-contact-details">
+              <p>P.O. BOX: 62000-00200, Nairobi, Kenya.</p>
+              <p><strong>Tel:</strong> +254 67 52181/4 LAN Ext 2814.</p>
+              <p><strong>Email Us:</strong> <a href="mailto:info.jhub@jkuat.ac.ke">info.jhub@jkuat.ac.ke</a></p>
+            </address>
           </section>
 
           <section class="footer-reference-column">
             <h3>Legal &amp; Compliance</h3>
-            <p><a [routerLink]="['/privacy-ethics']">Privacy &amp; Ethics</a> — Outlines compliance with Kenya’s Data Protection Act 2019 and NACOSTI research clearance protocols.</p>
-            <p><a href="/terms">Terms &amp; Conditions</a> — E-commerce fulfillment, product returns, and spawn replacement guidelines.</p>
+            <p><a [routerLink]="['/privacy-ethics']">Privacy &amp; Ethics</a> - Outlines compliance with Kenya’s Data Protection Act 2019 and NACOSTI research clearance protocols.</p>
+            <p><a href="/terms">Terms &amp; Conditions</a> - E-commerce fulfillment, product returns, and spawn replacement guidelines.</p>
           </section>
 
-          <section class="footer-reference-column footer-disclosures" aria-label="Project logos">
-            <a class="footer-logo-only" href="/partners/eu" aria-label="European Union partner page"><img src="/images/logos/eu_emblem.svg" alt="European Union emblem" loading="lazy" /></a>
-            <a class="footer-logo-only" href="/partners/bridge-ai" aria-label="BRIDGE-AI partner page"><img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI logo" loading="lazy" /></a>
+          <section class="footer-reference-column" aria-label="Project partners">
+            <h3>Project Partners</h3>
+            <div class="footer-disclosures">
+              <a class="footer-logo-only" [routerLink]="['/partners/jkuat']" aria-label="JKUAT partner page"><img src="/images/logos/jkuat_logo.svg" alt="Jomo Kenyatta University of Agriculture and Technology logo" loading="lazy" /></a>
+              <a class="footer-logo-only" [routerLink]="['/partners/jhub']" aria-label="JHUB Africa partner page"><img src="/images/logos/jhub_logo.svg" alt="JHUB Africa logo" loading="lazy" /></a>
+              <a class="footer-logo-only" [routerLink]="['/partners/bridge-ai']" aria-label="BRIDGE-AI partner page"><img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI logo" loading="lazy" /></a>
+            </div>
           </section>
         </div>
 
@@ -372,16 +390,39 @@ import { RouterModule } from '@angular/router';
       border-radius: 2px;
     }
 
+    .footer-funding {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      min-height: 132px;
+      margin-bottom: 30px;
+      padding: 18px 28px;
+      border: 1px solid rgba(6, 78, 59, .16);
+      border-radius: 8px;
+      background: #f7faf8;
+      color: #17372e;
+      text-align: center;
+    }
+    .footer-funding-emblem { display: grid; flex: 0 0 190px; place-items: center; }
+    .footer-funding-emblem img { display: block; width: 100%; height: 76px; object-fit: contain; }
+    .footer-funding-copy { min-width: 0; }
+    .footer-funding-label { margin: 0 0 5px; color: #567064; font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    .footer-funding-title { margin: 0; color: #17372e; font-size: 1.1rem; font-weight: 750; line-height: 1.35; }
+    .footer-funding-grant { margin: 5px 0 0; color: #496157; font-size: .84rem; line-height: 1.5; }
     .footer-reference-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px; padding: 14px 0 30px; border-bottom: 1px solid var(--footer-border); text-align: center; }
     .footer-reference-column { min-width: 0; padding: 0 10px; }
     .footer-reference-column h3 { margin: 0 0 18px; color: var(--footer-primary-light); font-size: .78rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
     .footer-reference-column h3::after { content: ''; display: block; width: 34px; height: 2px; margin: 8px auto 0; background: var(--footer-primary-light); }
     .footer-reference-column p { max-width: 340px; margin: 0 auto 14px; color: var(--footer-text-muted); font-size: .84rem; line-height: 1.7; }
+    .footer-reference-column .footer-institution { color: var(--footer-text-strong); font-weight: 650; }
+    .footer-contact-details { color: var(--footer-text-muted); font-size: .84rem; font-style: normal; line-height: 1.7; }
+    .footer-contact-details p { margin-bottom: 8px; }
     .footer-reference-column strong { color: var(--footer-text-strong); }
     .footer-reference-column a { color: var(--footer-text-muted); text-decoration: underline; text-decoration-color: rgba(240,180,94,.6); text-underline-offset: 3px; }
     .footer-reference-column a:hover { color: var(--footer-primary-light); }
-    .footer-disclosures { display: flex; align-items: center; justify-content: center; gap: 22px; }
-    .footer-logo-only { display: grid; place-items: center; width: 104px; height: 76px; padding: 10px; border: 1px solid var(--footer-border); border-radius: 12px; background: #fff; box-shadow: 0 10px 22px rgba(0,0,0,.14); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+    .footer-disclosures { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; }
+    .footer-logo-only { display: grid; place-items: center; width: 112px; height: 86px; padding: 10px; border: 1px solid var(--footer-border); border-radius: 8px; background: #fff; box-shadow: 0 10px 22px rgba(0,0,0,.14); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
     .footer-logo-only:hover { transform: translateY(-3px); border-color: var(--footer-primary-light); }
     .footer-logo-only:hover { box-shadow: 0 14px 28px rgba(0,0,0,.22); }
     .footer-logo-only img { display: block; width: 100%; height: 100%; object-fit: contain; }
@@ -490,9 +531,13 @@ import { RouterModule } from '@angular/router';
       .footer-reference-column { padding: 0; }
       .footer-reference-column h3 { margin-bottom: 12px; }
       .footer-reference-column p { font-size: .82rem; }
-      .footer-disclosures { justify-content: center; }
-      .footer-disclosures { gap: 12px; }
-      .footer-logo-only { width: 84px; height: 64px; padding: 8px; }
+      .footer-funding { flex-direction: column; gap: 8px; min-height: 0; margin-bottom: 24px; padding: 18px 16px; }
+      .footer-funding-emblem { flex-basis: auto; width: min(100%, 180px); }
+      .footer-funding-emblem img { height: 62px; }
+      .footer-funding-title { font-size: 1rem; }
+      .footer-funding-grant { font-size: .78rem; }
+      .footer-disclosures { gap: 8px; }
+      .footer-logo-only { width: 88px; height: 72px; padding: 8px; }
 
       .footer-copyright,
       .footer-credit {
