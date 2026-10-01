@@ -283,7 +283,7 @@ interface ContactFormData {
       letter-spacing: -0.02em;
     }
     .contact-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; min-width: 0; }
-    .form-group { display: flex; flex-direction: column; } 
+    .form-group { display: flex; flex-direction: column; }
     .form-group.full-width { grid-column: 1 / -1; }
     .form-group label {
       display: block;

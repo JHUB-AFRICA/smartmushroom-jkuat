@@ -1,14 +1,19 @@
 <main class="shop-page">
 	<section class="shop-hero">
-		<div class="marketplace-hero-title"><span class="eyebrow">SmartMushroom</span><h1>SmartMushroom marketplace</h1></div>
+		<div class="marketplace-hero-title"><h1>SmartMushroom marketplace</h1></div>
 	</section>
 
 	<section class="catalog-section" id="catalog" aria-labelledby="catalog-title">
 		<div class="section-heading">
 			<div><h2 id="catalog-title">Everything for your next harvest</h2></div>
 		</div>
+		@if (productsLoading()) {
+			<p class="catalog-status" role="status">Loading marketplace products...</p>
+		} @else if (productsError()) {
+			<p class="catalog-status" role="alert">Products could not be loaded. Please refresh and try again.</p>
+		} @else {
 		<div class="product-grid">
-			@for (product of products; track product.id) {
+			@for (product of products(); track product.id) {
 				<article class="product-card">
 					<div class="product-image-wrap">
 						<img [src]="product.image" [alt]="product.name" class="product-image" loading="lazy" />
@@ -24,6 +29,7 @@
 				</article>
 			}
 		</div>
+		}
 	</section>
 </main>
 
