@@ -268,8 +268,11 @@ export class AdminSidebarComponent {
 
   protected navItems = signal<AdminNavItem[]>([
     { path: '', label: 'Dashboard', icon: this.getDashboardIcon(), active: false },
-    { path: 'activities', label: 'Activities', icon: this.getActivityIcon(), active: false },
-    { path: 'events', label: 'Events', icon: this.getEventIcon(), active: false },
+    { path: 'shop-requests', label: 'Shop requests', icon: this.getShopIcon(), active: false },
+    { path: 'shop-products', label: 'Shop products', icon: 'fa-solid fa-box-open', active: false },
+    { path: 'submissions', label: 'Contacts', icon: this.getSubmissionsIcon(), active: false },
+    { path: 'activities', label: 'News/Activities', icon: this.getActivityIcon(), active: false },
+    { path: 'events', label: 'Training events', icon: this.getEventIcon(), active: false },
     { path: 'resources', label: 'Resources', icon: this.getResourceIcon(), active: false },
     { path: 'team', label: 'Team', icon: this.getTeamIcon(), active: false },
     { path: 'gallery', label: 'Gallery', icon: this.getGalleryIcon(), active: false },
@@ -278,7 +281,8 @@ export class AdminSidebarComponent {
     { path: 'community', label: 'Community', icon: this.getCommunityIcon(), active: false },
     { path: 'replication', label: 'Replication', icon: this.getReplicationIcon(), active: false },
     { path: 'submissions', label: 'Submissions', icon: this.getSubmissionsIcon(), active: false },
-    { path: 'shop-requests', label: 'Shop requests', icon: this.getShopIcon(), active: false }
+    { path: 'shop-requests', label: 'Shop requests', icon: this.getShopIcon(), active: false },
+    { path: 'shop-products', label: 'Shop products', icon: 'fa-solid fa-box-open', active: false }
   ]);
 
   constructor(

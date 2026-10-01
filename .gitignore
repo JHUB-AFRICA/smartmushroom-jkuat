@@ -5,6 +5,8 @@
 /tmp
 /out-tsc
 /bazel-out
+__pycache__/
+*.pyc
 
 # Node
 /node_modules
