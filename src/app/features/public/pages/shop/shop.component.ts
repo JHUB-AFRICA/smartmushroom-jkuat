@@ -4,16 +4,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 
-export interface ShopProduct { id: string; name: string; category: string; description: string; price: number; unit: string; image: string; badge?: string; }
+export interface ShopProduct { id: number; name: string; category: string; description: string; price: number; unit: string; image: string; badge?: string; }
 export interface ShopCartItem extends ShopProduct { quantity: number; }
-export const SHOP_PRODUCTS: ShopProduct[] = [
-	{ id: 'jambo101-spawn', name: 'JAMBO101 Spawn', category: 'Biological inputs', description: 'A high-yield strain developed by Mush& for local climate resilience and rapid fruiting.', price: 850, unit: '1 kg bag', image: '/images/smartmushrooms/jambo.jpeg', badge: 'Best seller' },
-	{ id: 'jambo101-temperature-stable', name: 'JAMBO101 Temperature-Stable Spawn', category: 'Biological inputs', description: 'A temperature-stable strain for small-scale and peri-urban growers.', price: 950, unit: '1 kg bag', image: '/images/smartmushrooms/JAMBO101 Temperature-Stable Spawn.jpeg' },
-	{ id: 'mambo101-spawn', name: 'MAMBO101 Spawn', category: 'Biological inputs', description: 'A reliable mushroom strain selected for accessible African growing conditions.', price: 850, unit: '1 kg bag', image: '/images/smartmushrooms/mambo.jpeg', badge: 'New strain' },
-	{ id: 'fresh-mushroom-punnets', name: 'Fresh Mushroom Punnets', category: 'Fresh produce', description: 'Hand-picked Oyster and Button mushrooms packed in eco-friendly punnets.', price: 450, unit: '250 g punnet', image: '/images/smartmushrooms/punnets.jpeg', badge: 'Fresh today' },
-	{ id: 'mushroom-wine', name: 'Mushroom Wine', category: 'Value-added', description: 'An artisanal fermented specialty wine produced at JKUAT laboratories.', price: 1200, unit: '750 ml bottle', image: '/images/smartmushrooms/mushwine.jpeg' },
-	{ id: 'pumice-house-iot-kit', name: 'Pumice House + IoT Kit', category: 'Agritech hardware', description: 'A complete off-grid package with pumice wall layout, LoRaWAN sensor array, solar unit, foggers, and fans.', price: 48000, unit: 'installation kit', image: '/images/smartmushrooms/iott.jpeg', badge: 'Grow smarter' }
-];
 
 @Injectable({ providedIn: 'root' })
 export class ShopCartService {
@@ -22,8 +14,8 @@ export class ShopCartService {
 	readonly cartTotal = computed(() => this.cart().reduce((total, item) => total + item.price * item.quantity, 0));
 	add(product: ShopProduct): void { this.cart.update(items => { const existing = items.find(item => item.id === product.id); return existing ? items.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item) : [...items, { ...product, quantity: 1 }]; }); }
 	buyNow(product: ShopProduct): void { this.cart.set([{ ...product, quantity: 1 }]); }
-	changeQuantity(productId: string, change: number): void { this.cart.update(items => items.map(item => item.id === productId ? { ...item, quantity: item.quantity + change } : item).filter(item => item.quantity > 0)); }
-	remove(productId: string): void { this.cart.update(items => items.filter(item => item.id !== productId)); }
+	changeQuantity(productId: number, change: number): void { this.cart.update(items => items.map(item => item.id === productId ? { ...item, quantity: item.quantity + change } : item).filter(item => item.quantity > 0)); }
+	remove(productId: number): void { this.cart.update(items => items.filter(item => item.id !== productId)); }
 	clear(): void { this.cart.set([]); }
 }
 
@@ -40,7 +32,9 @@ export class ShopComponent {
 	private readonly formBuilder = inject(FormBuilder);
 	private readonly cartService = inject(ShopCartService);
 
-	readonly products: ShopProduct[] = SHOP_PRODUCTS;
+	readonly products = signal<ShopProduct[]>([]);
+	readonly productsLoading = signal(true);
+	readonly productsError = signal(false);
 
 	readonly cart = this.cartService.cart;
 	readonly drawerOpen = signal(false);
@@ -57,8 +51,16 @@ export class ShopComponent {
 	});
 
 	constructor(route: ActivatedRoute) {
+		this.loadProducts();
 		route.queryParamMap.subscribe(params => {
 			if (params.get('bag') === 'open') this.openDrawer();
+		});
+	}
+
+	private loadProducts(): void {
+		this.api.get<ShopProduct[]>('/shop-products').subscribe({
+			next: products => { this.products.set(products); this.productsLoading.set(false); },
+			error: () => { this.productsError.set(true); this.productsLoading.set(false); }
 		});
 	}
 
@@ -72,11 +74,11 @@ export class ShopComponent {
 		this.openDrawer();
 	}
 
-	changeQuantity(productId: string, change: number): void {
+	changeQuantity(productId: number, change: number): void {
 		this.cartService.changeQuantity(productId, change);
 	}
 
-	removeFromCart(productId: string): void {
+	removeFromCart(productId: number): void {
 		this.cartService.remove(productId);
 	}
 

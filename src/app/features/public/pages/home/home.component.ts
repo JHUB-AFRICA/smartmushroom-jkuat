@@ -14,7 +14,8 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
 import { TeamService } from '../../../../services/team.service';
 import { TeamMember } from '../../../core/models/team.model';
 import { Router } from '@angular/router';
-import { ShopCartService, ShopProduct, SHOP_PRODUCTS } from '../shop/shop.component';
+import { ShopCartService, ShopProduct } from '../shop/shop.component';
+import { ApiService } from '../../../core/services/api.service';
 
 type SmartMushroomFeedItem = {
   title: string;
@@ -46,7 +47,7 @@ type SmartMushroomFeedItem = {
 export class HomeComponent {
   private readonly teamService = inject(TeamService);
   protected readonly team = signal<TeamMember[]>([]);
-  protected readonly partners = [{ slug:'eu',name:'European Union (EU)',logo:'/images/logos/eu_emblem.svg' },{ slug:'bridge-ai',name:'BRIDGE-AI',logo:'/images/logos/bridge_ai_logo.svg' },{ slug:'gates-foundation',name:'Bill & Melinda Gates Foundation',logo:'/images/logos/bill.jpeg' },{ slug:'jkuat',name:'JKUAT',logo:'/images/logos/jkuat_logo.svg' },{ slug:'mush&',name:'Mush&',logo:'/images/logos/mush.jpeg' },{ slug:'koica',name:'KOICA',logo:'/images/logos/koica.jpeg' },{ slug:'gdih',name:'gDIH',logo:'/images/logos/gdih.jpeg' },{ slug:'jhub',name:'JHUB Africa',logo:'/images/logos/jhub_logo.svg' }];
+  protected readonly partners = [{ slug:'eu',name:'European Union (EU)',logo:'/images/logos/eu_emblem.svg' },{ slug:'bridge-ai',name:'BRIDGE-AI',logo:'/images/logos/bridge_ai_logo.svg' },{ slug:'jkuat',name:'JKUAT',logo:'/images/webimages/partners/jkuat-logo.png' },{ slug:'mush&',name:'Mush&',logo:'/images/logos/mush.jpeg' },{ slug:'koica',name:'KOICA',logo:'/images/logos/koica.jpeg' },{ slug:'gdih',name:'gDIH',logo:'/images/logos/gdih.jpeg' },{ slug:'jhub',name:'JHUB Africa',logo:'/images/logos/jhub_logo.svg' }];
   protected readonly marqueePartners = [...this.partners,...this.partners];
   protected readonly products = [{ index:'01 / GROWING SYSTEM',icon:'◒',title:'Smart Mushroom',description:'Sensor-led growing guidance for more stable conditions.',route:'/smartmushroom-tech' },{ index:'02 / LEARNING',icon:'✦',title:'Farmer training',description:'Practical workshops for digital farming skills.',route:'/training-events' },{ index:'03 / REPLICATION',icon:'↗',title:'Replication toolkit',description:'Open resources for adapting climate-smart innovation.',route:'/replication-toolkit' },{ index:'04 / COMMUNITY',icon:'◎',title:'Community practice',description:'A network of builders, researchers, farmers and SMEs.',route:'/community-practice' }];
   protected readonly counters = [{value:'0',label:'Farmers trained'},{value:'0',label:'Grow houses connected'},{value:'0',label:'Training sessions'},{value:'0',label:'SMEs supported'}];
@@ -118,7 +119,7 @@ export class HomeComponent {
             <p class="section-kicker">SmartMushroom Marketplace</p>
           </div>
           <div class="featured-products-track" aria-label="Featured shop products">
-            @for (product of featuredProducts; track product.id) {
+            @for (product of featuredProducts(); track product.id) {
               <article class="featured-product-card">
                 <img [src]="product.image" [alt]="product.name" loading="lazy" />
                 @if (product.badge) { <span class="product-badge">{{ product.badge }}</span> }
@@ -1716,14 +1717,12 @@ export class LegacyHomeComponent implements OnInit, OnDestroy {
   protected readonly activeHeroImage = computed(() => this.heroImages()[this.heroIndex()] || this.localHeroFallback);
   protected readonly heroFallbackImage = computed(() => this.heroImages()[0] || this.localHeroFallback);
   protected readonly partners = [
-    { slug: 'eu', name: 'European Union (EU)', logo: '/images/logos/eu_emblem.svg' },
-    { slug: 'bridge-ai', name: 'BRIDGE-AI', logo: '/images/logos/bridge_ai_logo.svg' },
-    { slug: 'gates-foundation', name: 'Bill & Melinda Gates Foundation', logo: '/images/logos/bill.jpeg' },
-    { slug: 'jkuat', name: 'JKUAT', logo: '/images/logos/jkuat_logo.svg' },
-    { slug: 'mush&', name: 'Mush&', logo: '/images/logos/mush.jpeg' },
-    { slug: 'koica', name: 'KOICA', logo: '/images/logos/koica.jpeg' },
-    { slug: 'gdih', name: 'gDIH', logo: '/images/logos/gdih.jpeg' },
-    { slug: 'jhub', name: 'JHUB Africa', logo: '/images/logos/jhub_logo.svg' }
+    { slug: 'eu', name: '', logo: '/images/logos/eu_emblem.svg' },
+    { slug: 'bridge-ai', name: '', logo: '/images/logos/bridge_ai_logo.svg' },
+    { slug: 'jkuat', name: '', logo: '/images/webimages/partners/jkuat-logo.png' },
+    { slug: 'mush&', name: '', logo: '/images/logos/mush.jpeg' },
+    { slug: 'koica', name: '', logo: '/images/logos/koica.jpeg' },
+    { slug: 'jhub', name: '', logo: '/images/logos/jhub_logo.svg' }
   ];
   protected readonly marqueePartners = [...this.partners, ...this.partners];
   private rotation?: ReturnType<typeof setInterval>;
@@ -1738,13 +1737,7 @@ export class LegacyHomeComponent implements OnInit, OnDestroy {
   protected latestActivities = signal<Activity[]>([]);
   protected upcomingEvents = signal<Event[]>([]);
   protected readonly team = signal<TeamMember[]>([]);
-  protected readonly featuredProducts = SHOP_PRODUCTS.filter(product => [
-    'jambo101-spawn',
-    'mambo101-spawn',
-    'fresh-mushroom-punnets',
-    'mushroom-wine',
-    'pumice-house-iot-kit'
-  ].includes(product.id));
+  protected readonly featuredProducts = signal<ShopProduct[]>([]);
   protected readonly impactCounters = [
     { value: '0', label: 'Active grow houses' },
     { value: '0 kg', label: 'Spawn distributed' },
@@ -1752,6 +1745,7 @@ export class LegacyHomeComponent implements OnInit, OnDestroy {
     { value: '0', label: 'Community partners' }
   ];
   private readonly cartService = inject(ShopCartService);
+  private readonly api = inject(ApiService);
   protected readonly cartCount = this.cartService.cartCount;
   protected readonly latestFeed = computed<SmartMushroomFeedItem[]>(() => [
     ...this.latestActivities().map(activity => ({
@@ -1800,6 +1794,7 @@ export class LegacyHomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.teamService.getVisibleTeamMembers().subscribe({ next: members => this.team.set(members), error: () => this.team.set([]) });
+    this.api.get<ShopProduct[]>('/shop-products').subscribe({ next: products => this.featuredProducts.set(products), error: () => this.featuredProducts.set([]) });
     this.loadData();
     this.loadHeroImages();
     this.syncStickyOffset();

@@ -22,7 +22,7 @@ interface NavItem {
         <div class="header-left">
           <div class="logo-group">
             <a [routerLink]="['/']" class="logo" aria-label="Smart Mushroom Kenya Pilot home">
-              <img src="/images/logos/mushlogo.jpeg" alt="Smart Mushroom Kenya Pilot" class="logo-img bridge-logo" />
+              <img src="/images/logos/logogreenn.jpeg" alt="Smart Mushroom Kenya Pilot" class="logo-img bridge-logo" />
               <span class="logo-divider" aria-hidden="true"></span>
               <span class="logo-copy"><strong>SmartMushroom</strong></span>
             </a>
@@ -77,7 +77,7 @@ interface NavItem {
       left: 0;
       right: 0;
       z-index: 1000;
-      background: #064e3b;
+      background: #064e2f;
       backdrop-filter: blur(14px);
       border-bottom: 1px solid rgba(255, 255, 255, .16);
       box-shadow: 0 8px 24px rgba(3, 56, 43, .22);
@@ -127,9 +127,8 @@ interface NavItem {
     }
     .logo-copy strong {
       color: #d8e86b;
-      font: 800 clamp(1.28rem, 1.65vw, 1.9rem)/1 Georgia, 'Times New Roman', serif;
-      letter-spacing: 0.015em;
-      font-weight: 800;
+      font: 700 clamp(1.28rem, 1.65vw, 1.9rem)/1 'Avenir Next', 'Trebuchet MS', sans-serif;
+      letter-spacing: 0.01em;
       text-shadow: 0 2px 12px rgba(0,0,0,.18);
     }
 
@@ -388,7 +387,8 @@ export class HeaderComponent {
     { path: '/', label: 'Home' },
     { path: '/smartmushroom-tech', label: 'SmartMushroom Tech' },
     { path: '/shop', label: 'SmartMushroom Shop' },
-    { path: '/training-events', label: 'Farmers-Training' }
+    { path: '/training-events', label: 'Farmers-Training' },
+    { path: '/activities', label: 'News & Activities' }
   ];
 
   protected socialLinks = SOCIAL_LINKS;

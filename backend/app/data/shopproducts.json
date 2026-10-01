@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "JAMBO101 Spawn",
+    "category": "Biological inputs",
+    "description": "A high-yield strain developed by Mush& for local climate resilience and rapid fruiting.",
+    "price": 850,
+    "unit": "1 kg bag",
+    "image": "/images/smartmushrooms/jambo.jpeg",
+    "badge": "Best seller"
+  },
+  {
+    "name": "JAMBO101 Temperature-Stable Spawn",
+    "category": "Biological inputs",
+    "description": "A temperature-stable strain for small-scale and peri-urban growers.",
+    "unit": "1 kg bag",
+    "image": "/images/smartmushrooms/JAMBO101 Temperature-Stable Spawn.jpeg",
+    "price": 950,
+    "badge": "Stable Spawn",
+    "id": 2
+  },
+  {
+    "id": 3,
+    "name": "MAMBO101 Spawn",
+    "category": "Biological inputs",
+    "description": "A reliable mushroom strain selected for accessible African growing conditions.",
+    "price": 850,
+    "unit": "1 kg bag",
+    "image": "/images/smartmushrooms/mambo.jpeg",
+    "badge": "New strain"
+  },
+  {
+    "id": 4,
+    "name": "Fresh Mushroom Punnets",
+    "category": "Fresh produce",
+    "description": "Hand-picked Oyster and Button mushrooms packed in eco-friendly punnets.",
+    "price": 450,
+    "unit": "250 g punnet",
+    "image": "/images/smartmushrooms/punnets.jpeg",
+    "badge": "Fresh today"
+  },
+  {
+    "name": "Mushroom Wine",
+    "category": "Value-added",
+    "description": "An artisanal fermented specialty wine produced at JKUAT laboratories.",
+    "unit": "750 ml bottle",
+    "image": "/images/smartmushrooms/mushwine.jpeg",
+    "price": 1200,
+    "badge": "Artisanal-fermented",
+    "id": 5
+  },
+  {
+    "name": "Pumice House + IoT Kit",
+    "category": "Agritech hardware",
+    "description": "A complete off-grid package with pumice wall layout, LoRaWAN sensor array, solar unit, foggers, and fans.",
+    "unit": "installation kit",
+    "image": "/images/smartmushrooms/iott.jpeg",
+    "price": 150000,
+    "badge": "Grow smarter",
+    "id": 6
+  }
+]
